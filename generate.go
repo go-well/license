@@ -1,33 +1,23 @@
 package activation_code
 
 import (
+	"crypto/ed25519"
 	"crypto/rand"
-	"crypto/rsa"
-	"crypto/x509"
 )
 
-func GenerateKeyPair(bits int) ([]byte, []byte, error) {
-	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
-	if err != nil {
-		return nil, nil, err
-	}
-	publicKey := privateKey.PublicKey
-
-	privateDer := x509.MarshalPKCS1PrivateKey(privateKey)
-	publicDer := x509.MarshalPKCS1PublicKey(&publicKey)
-
-	return privateDer, publicDer, nil
+func GenerateKeyPair() ([]byte, []byte, error) {
+	return ed25519.GenerateKey(rand.Reader)
 }
 
-func GenerateKeyPairFile(bits int, private, public string) error {
-	privateDer, publicDer, err := GenerateKeyPair(bits)
+func GenerateKeyPairFile(private, public string) error {
+	privateDer, publicDer, err := GenerateKeyPair()
 	if err != nil {
 		return err
 	}
 
-	err = WritePemFile(private, "RSA Private Key", privateDer)
+	err = WritePemFile(private, "ED25519 Private Key", privateDer)
 	if err != nil {
 		return err
 	}
-	return WritePemFile(public, "RSA Public Key", publicDer)
+	return WritePemFile(public, "ED25519 Public Key", publicDer)
 }
