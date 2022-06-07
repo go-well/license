@@ -1,11 +1,11 @@
 package main
 
 import (
-	"encoding/gob"
+	"encoding/hex"
 	"flag"
+	"fmt"
 	activation_code "github.com/activation-code"
-	"os"
-	"time"
+	"github.com/super-l/machine-code/machine"
 )
 
 func main() {
@@ -16,16 +16,32 @@ func main() {
 
 	flag.Usage()
 
-	_ = activation_code.GenerateKeyPairFile("private.key", "public.key")
+	pub, key, _ := activation_code.GenerateKeyPair()
+	fmt.Println(hex.EncodeToString(pub))
+	fmt.Println(hex.EncodeToString(key))
+
+	md := machine.GetMachineData()
 
 	lic := &activation_code.Licence{
-		Product:   "iot-master",
-		ExpireAt:  time.Now(),
-		User:      "jason@zgwit.com",
-		Signature: "0231687983216798516546898",
+		Product:  "iot-master",
+		User:     "jason",
+		UUID:     md.PlatformUUID,
+		SN:       md.SerialNumber,
+		CPUID:    md.CpuId,
+		MAC:      md.Mac,
+		ExpireAt: "2022-06-08",
+		//Signature: "0231687983216798516546898",
 	}
-	file, _ := os.OpenFile("gob", os.O_CREATE, os.ModePerm)
-	enc := gob.NewEncoder(file)
-	_ = enc.Encode(lic)
-	file.Close()
+
+	lic.Sign(key)
+	fmt.Println(lic.Encode())
+
+	err := lic.Verify(pub)
+	if err != nil {
+		panic(err)
+	}
+	err = lic.Match("iot-master")
+	if err != nil {
+		panic(err)
+	}
 }
