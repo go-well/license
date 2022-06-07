@@ -1,4 +1,4 @@
-package activation_code
+package license
 
 import (
 	"crypto/ed25519"

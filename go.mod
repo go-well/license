@@ -1,4 +1,4 @@
-module github.com/activation-code
+module github.com/go-license
 
 go 1.18
 

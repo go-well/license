@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
-	activation_code "github.com/activation-code"
+	activation_code "github.com/go-license"
 	"github.com/super-l/machine-code/machine"
 )
 
