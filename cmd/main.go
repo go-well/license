@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
-	activation_code "github.com/zgwit/go-license"
+	activation_code "github.com/go-well/license"
 	"github.com/super-l/machine-code/machine"
 )
 

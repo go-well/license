@@ -1,4 +1,4 @@
-module github.com/zgwit/go-license
+module github.com/go-well/license
 
 go 1.18
 
